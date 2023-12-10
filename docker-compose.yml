@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  nestapp:
+    container_name: nestapp
+    image: sergio/nest_crud_with_docker:1.0.0
+    build: .
+    ports:
+     - 3000:3000
+    environment: 
+      - DB_TYPE=postgres
+      - PG_HOST=db
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DB=postgres
+      - PG_PORT=5432
+    depends_on:
+    # has to match the PG_HOST
+      - db
+  db:
+    container_name: db
+    image: postgres:12
+    ports:
+      - 5432:5432
+    environment:
+    # here we have to use the deafault postgress enviroment variables
+    # they have to match my environment variables tha are above
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+    # name of the volume
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}
+
+
+# first run docker compose up -d db
+# run docker compose down
+# then run docker compose build
+# then docker compose up
